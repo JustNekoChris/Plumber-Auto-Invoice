@@ -1,0 +1,18 @@
+{
+  "name": "plumber-auto-invoice",
+  "version": "1.0.0",
+  "description": "Program to create and track invoice information for plumber.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "startLive": "set NODE_ENV=development&&electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JustNekoChris",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^37.1.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-reloader": "^1.2.3"
+  }
+}

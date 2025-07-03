@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+}
+
+.titlebar {
+  height: 31px;
+  /* background: blue; */
+  color: black;
+  background-color: rgb(226, 226, 226);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial;
+  app-region: drag;
+}
+
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  flex: 1;
+}
+
+label {
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
