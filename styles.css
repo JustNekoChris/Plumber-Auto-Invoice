@@ -1,10 +1,11 @@
-body {
-    margin: 0;
+.body {
+  font-family: sans-serif;
+  padding: 1rem;
+  background-color: #f9f9f9;
 }
 
 .titlebar {
   height: 31px;
-  /* background: blue; */
   color: black;
   background-color: rgb(226, 226, 226);
   display: flex;
@@ -12,6 +13,28 @@ body {
   align-items: center;
   font-family: Arial;
   app-region: drag;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  background: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+legend {
+  font-weight: bold;
+  padding: 0 0.5rem;
 }
 
 .form-container {
@@ -23,8 +46,8 @@ body {
 .form-group {
   display: flex;
   flex-direction: column;
+  flex: 1 1 250px;
   min-width: 200px;
-  flex: 1;
 }
 
 label {
@@ -35,4 +58,43 @@ label {
 input {
   padding: 0.5rem;
   font-size: 1rem;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.procedure-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+
+.procedure-row textarea {
+  flex: 3;
+  resize: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  min-height: 40px;
+}
+
+.cost-input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+  min-width: 80px;
+}
+
+.delete-btn {
+  background-color: #ff4d4d;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+  height: 100%;
+}
+
+.delete-btn:hover {
+  background-color: #d11a2a;
 }
