@@ -5,3 +5,4 @@ yarn-debug.log
 .DS_Store
 build/
 dist/
+*.png

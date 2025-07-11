@@ -98,3 +98,22 @@ input {
 .delete-btn:hover {
   background-color: #d11a2a;
 }
+
+.input-reset-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-reset-wrapper input {
+  flex: 1;
+}
+
+.reset-btn {
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  background-color: #ccc;
+  border: 1px solid #888;
+}

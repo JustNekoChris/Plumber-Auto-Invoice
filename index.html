@@ -70,11 +70,30 @@
       </fieldset>
       <fieldset>
         <legend>Payment & Info</legend>
-        <div>
-          
+        <div class="form-container">
+          <div class="form-group total-group">
+            <label for="totalCost">Total Cost</label>
+            <div class="input-reset-wrapper">
+              $ <input type="text" id="totalCost">
+              <button class="reset-btn" id="resetButton">reset</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="paymentFollow">Payments as Followed</label>
+            <input type="text" id="paymentFollow">
+          </div>
+          <div class="form-group">
+            <label for="submittedBy"> Submitted By</label>
+            <input type="text" id="submittedBy">
+          </div>
+          <div class="form-group">
+            <label for="withdrawPeriod"> Withdraw Period </label>
+            <input type="text" id="withdrawPeriod">
+          </div>
         </div>
       </fieldset>
     </div>
+    <button id="savePdfBtn">Save Work Order as PDF</button>
 
   <script src="./index.js"></script>
   </body>

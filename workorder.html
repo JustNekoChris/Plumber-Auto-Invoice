@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Work Order</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .section { margin-bottom: 20px; }
+    label { font-weight: bold; }
+    .procedure { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Work Order</h1>
+  <div class="section" id="info"></div>
+  <div class="section" id="procedures"></div>
+  <div class="section" id="payment"></div>
+
+  <script>
+    // This script expects `window.workOrderData` to be injected before load
+    const data = window.workOrderData || {};
+
+    // Fill info
+    const infoDiv = document.getElementById('info');
+    infoDiv.innerHTML = `
+      <h2>Info</h2>
+      <p><label>Name:</label> ${data.name || ''}</p>
+      <p><label>Job Name:</label> ${data.jobName || ''}</p>
+      <p><label>Tech Name:</label> ${data.techName || ''}</p>
+      <p><label>Address:</label> ${data.address || ''}</p>
+      <p><label>Job Location:</label> ${data.jobLocation || ''}</p>
+      <p><label>Date:</label> ${data.date || ''}</p>
+      <p><label>Date of Plans:</label> ${data.datePlans || ''}</p>
+      <p><label>Phone:</label> ${data.phone || ''}</p>
+      <p><label>Email:</label> ${data.email || ''}</p>
+      <p><label>Architect:</label> ${data.architect || ''}</p>
+    `;
+
+    // Fill procedures
+    const proceduresDiv = document.getElementById('procedures');
+    proceduresDiv.innerHTML = '<h2>Procedures</h2>';
+    (data.procedures || []).forEach(proc => {
+      const p = document.createElement('p');
+      p.className = 'procedure';
+      p.textContent = proc.description + ' - $' + proc.cost.toFixed(2);
+      proceduresDiv.appendChild(p);
+    });
+
+    // Fill payment info
+    const paymentDiv = document.getElementById('payment');
+    paymentDiv.innerHTML = `
+      <h2>Payment & Info</h2>
+      <p><label>Total Cost:</label> $${data.totalCost || '0.00'}</p>
+      <p><label>Payments as Followed:</label> ${data.paymentFollow || ''}</p>
+      <p><label>Submitted By:</label> ${data.submittedBy || ''}</p>
+      <p><label>Withdraw Period:</label> ${data.withdrawPeriod || ''}</p>
+    `;
+  </script>
+</body>
+</html>

@@ -11,7 +11,7 @@ if (env === 'development') {
     });
 }
 
-const createWindow = () => { 
+const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
@@ -38,5 +38,55 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-    if(process.platform !== 'darwin') app.quit()
+    if (process.platform !== 'darwin') app.quit()
 })
+
+const fs = require('fs');
+const { dialog } = require('electron');
+
+ipcMain.handle('generate-pdf', async (event, workOrderData) => {
+    const { filePath } = await dialog.showSaveDialog({
+        defaultPath: 'workorder.pdf',
+        filters: [{ name: 'PDF Files', extensions: ['pdf'] }]
+    });
+
+    if (filePath) {
+        await generateWorkOrderPDF(workOrderData, filePath);
+        return filePath;
+    } else {
+        throw new Error('Save canceled');
+    }
+});
+
+function generateWorkOrderPDF(workOrderData, outputPath) {
+    return new Promise((resolve, reject) => {
+        const win = new BrowserWindow({
+            width: 800,
+            height: 600,
+            show: false,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+            }
+        });
+
+        win.loadFile('workorder.html');
+
+        win.webContents.once('did-finish-load', () => {
+            win.webContents.executeJavaScript(`window.workOrderData = ${JSON.stringify(workOrderData)}`)
+                .then(() => {
+                    setTimeout(() => {
+                        win.webContents.printToPDF({}).then(dataBuffer => {
+                            fs.writeFile(outputPath, dataBuffer, (err) => {
+                                win.close();
+                                if (err) reject(err);
+                                else resolve(outputPath);
+                            });
+                        }).catch(reject);
+                    }, 100);
+                })
+                .catch(reject);
+        });
+    });
+}
