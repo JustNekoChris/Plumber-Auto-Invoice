@@ -25,17 +25,75 @@ const createWindow = () => {
     win.loadFile('index.html')
 }
 
+function openWorkOrderPreview(workOrderData) {
+  const previewWin = new BrowserWindow({
+    width: 850,  // Letter width approx + some margin
+    height: 1100, // Letter height approx + some margin
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
+
+  previewWin.loadFile('workorder.html').then(() => {
+    // Inject the data as a global variable for the renderer
+    previewWin.webContents.executeJavaScript(`window.workOrderData = ${JSON.stringify(workOrderData)};`).then(() => {
+      // Optionally, send a signal so the renderer knows to render
+      previewWin.webContents.executeJavaScript(`if(window.renderWorkOrder) window.renderWorkOrder(window.workOrderData);`);
+    });
+  });
+
+  previewWin.webContents.openDevTools();
+
+  previewWin.on('closed', () => {
+    // Clean up if needed
+  });
+
+  return previewWin;
+}
+
 app.whenReady().then(() => {
+  createWindow();
 
-    ipcMain.handle('ping', () => 'pong')
-    createWindow()
+  // Example: open preview window with some sample data:
+  const sampleData = {
+    proposalToName: 'John Doe',
+    jobName: 'New Kitchen Remodel',
+    address: '123 Main St, Oakland, CA',
+    jobLocation: 'Backyard',
+    date: '2025-07-11',
+    datePlans: '2025-06-30',
+    phone: '(510) 123-4567',
+    email: 'john@example.com',
+    architect: 'Jane Architect',
+    procedures: [
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Install new pipes', cost: 2500 },
+      { description: 'Replace sink', cost: 400 }
+    ],
+    totalCost: 2900,
+    paymentFollow: '50% upfront, 50% on completion',
+    submittedBy: 'Oakland Rooter Team',
+    withdrawPeriod: '30',
+    signatureCustomer: '',
+    dateAccepted: '',
+    signatureCompany: ''
+  };
 
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow()
-        }
-    })
-})
+//   openWorkOrderPreview(sampleData);
+});
+
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
@@ -59,34 +117,36 @@ ipcMain.handle('generate-pdf', async (event, workOrderData) => {
 });
 
 function generateWorkOrderPDF(workOrderData, outputPath) {
-    return new Promise((resolve, reject) => {
-        const win = new BrowserWindow({
-            width: 800,
-            height: 600,
-            show: false,
-            webPreferences: {
-                preload: path.join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-            }
-        });
+  return new Promise((resolve, reject) => {
+    const win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      show: false,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false,
+      }
+    });
 
-        win.loadFile('workorder.html');
-
-        win.webContents.once('did-finish-load', () => {
-            win.webContents.executeJavaScript(`window.workOrderData = ${JSON.stringify(workOrderData)}`)
-                .then(() => {
-                    setTimeout(() => {
-                        win.webContents.printToPDF({}).then(dataBuffer => {
-                            fs.writeFile(outputPath, dataBuffer, (err) => {
-                                win.close();
-                                if (err) reject(err);
-                                else resolve(outputPath);
-                            });
-                        }).catch(reject);
-                    }, 100);
-                })
-                .catch(reject);
+    ipcMain.once('render-complete', () => {
+      // Now that the page is rendered with the data, print to PDF
+      win.webContents.printToPDF({})
+        .then(dataBuffer => {
+          fs.writeFile(outputPath, dataBuffer, err => {
+            win.close();
+            if (err) reject(err);
+            else resolve(outputPath);
+          });
+        })
+        .catch(err => {
+          win.close();
+          reject(err);
         });
     });
+
+    win.loadFile('workorder.html').then(() => {
+      win.webContents.executeJavaScript(`window.workOrderData = ${JSON.stringify(workOrderData)}`);
+    }).catch(reject);
+  });
 }

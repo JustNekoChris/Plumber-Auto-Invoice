@@ -1,61 +1,501 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Work Order</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h1 { text-align: center; }
-    .section { margin-bottom: 20px; }
-    label { font-weight: bold; }
-    .procedure { margin-bottom: 10px; }
-  </style>
+    <meta charset="UTF-8" />
+    <title>Proposal - Oakland Rooter and Plumbing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            /* box-sizing: border-box; */
+            background-color: #f0f0f0; /* Light background for contrast */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .proposal-form {
+            width: 8.5in; /* Standard letter width */
+            padding: 30px;
+            /* box-sizing: border-box; */
+            display: grid;
+            flex-direction: column;
+            gap: 15px; /* Spacing between main sections */
+            position: relative; /* For absolute positioning of elements */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid black; /* Line under the header */
+            padding-bottom: 5px;
+        }
+
+        .header .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: auto; /* Pushes other elements to the right */
+        }
+
+        .header .page-info {
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .company-info {
+            display: grid;
+            grid-template-columns: 150px 1fr auto; /* Logo, Company Details, Proposal Number */
+            gap: 15px;
+            align-items: center;
+        }
+
+        .company-info .logo {
+            width: 120px; /* Adjust as needed */
+            height: auto;
+            border: 1px solid black;
+            padding: 5px;
+            box-sizing: border-box;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px; /* Placeholder text size */
+            color: #666;
+            text-align: center;
+        }
+
+        .company-info .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .company-details {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .company-details strong {
+            font-size: 16px;
+        }
+
+        .proposal-number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #e60000; /* Red color from the image */
+            align-self: flex-start; /* Align to the top of its grid cell */
+            padding: 5px 10px;
+            border: 2px solid #e60000;
+            background-color: #fff;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns for customer and job info */
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .section-grid .item {
+            display: grid;
+            grid-template-rows: auto 1fr; /* Label then input area */
+            border: 1px solid black;
+            padding: 5px;
+            box-sizing: border-box;
+            min-height: 40px; /* Standard height for input boxes */
+        }
+
+        .section-grid .item.full-width {
+            grid-column: 1 / -1; /* Spans across both columns */
+        }
+
+        .section-grid label {
+            font-size: 11px;
+            font-weight: normal; /* Labels are not bold in the image */
+            margin-bottom: 2px;
+            color: #555;
+        }
+
+        .data-field {
+            font-size: 14px;
+            min-height: 18px; /* To give space for content */
+            word-wrap: break-word; /* Allow long text to wrap */
+        }
+
+        /* Adjustments for specific items to match the image layout */
+        .item.address, .item.job-location, .item.job-name {
+            grid-column: span 1;
+            min-height: 60px; /* Taller boxes */
+        }
+
+        .item.date, .item.date-of-plans, .item.architect, .item.phone, .item.email {
+            min-height: 40px;
+        }
+
+        .item.architect {
+             grid-column: 2 / 3; /* Architect aligns to the second column */
+        }
+
+        .item.job-name {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3; /* Spans two rows */
+        }
+
+        .item.proposal-submitted-to {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3; /* Spans two rows */
+        }
+
+
+        .specifications-estimates {
+            border: 1px solid black;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .specifications-estimates .label {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .specifications-estimates .content-area {
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap; /* Preserve line breaks from data */
+        }
+
+        .total-sum-section {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .total-sum-section .left-text {
+            font-size: 12px;
+            flex: 1; /* Takes up available space */
+            line-height: 1.4;
+        }
+
+        .total-sum-section .right-amount {
+            display: flex;
+            align-items: center;
+            border: 1px solid black;
+            padding: 5px;
+            min-width: 150px; /* Width for the dollar amount */
+            box-sizing: border-box;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .total-sum-section .right-amount label {
+            font-size: 11px;
+            margin-right: 5px;
+            font-weight: normal;
+            color: #555;
+        }
+
+        .total-sum-section .right-amount .currency {
+            margin-right: 5px;
+        }
+
+        .payment-conditions {
+            border: 1px solid black;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            min-height: 60px; /* Space for payment terms */
+        }
+
+        .payment-conditions .label {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .payment-conditions .content-area {
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 15px;
+        }
+
+        .footer-grid .note-section {
+            grid-column: 1 / -1; /* Spans full width */
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .footer-grid .signature-line {
+            border-bottom: 1px solid black;
+            padding-top: 20px;
+            font-size: 12px;
+            position: relative;
+        }
+
+        .footer-grid .signature-line label {
+            position: static; /* or just remove this line */
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .acceptance-section {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold; 
+            border: 1px solid black;
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+        .bottom-signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .bottom-signatures .signature-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .bottom-signatures .signature-line {
+            border-bottom: 1px solid black;
+            width: 100%;
+            min-height: 20px; /* Space for signature */
+        }
+
+        .bottom-signatures .signature-label {
+            font-size: 11px;
+            margin-top: 5px;
+            color: #555;
+        }
+
+        .bottom-signatures .date-accepted-block {
+            width: 150px; /* Fixed width for date field */
+        }
+
+        .bottom-signatures .date-accepted-block .signature-line {
+            min-width: 120px;
+        }
+
+        /* Utility for empty fields to show borders */
+        .data-field:empty:before {
+            content: "\00a0"; /* Non-breaking space to maintain height */
+        }
+
+        .procedure-item {
+            padding: 4px 0;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-  <h1>Work Order</h1>
-  <div class="section" id="info"></div>
-  <div class="section" id="procedures"></div>
-  <div class="section" id="payment"></div>
+    <div class="proposal-form">
+        <div class="header">
+            <div class="title">PROPOSAL</div>
+        </div>
 
-  <script>
-    // This script expects `window.workOrderData` to be injected before load
-    const data = window.workOrderData || {};
+        <div class="company-info">
+            <div class="logo">
+                <img src="assets/o49lx0n6.png" alt="Oakland Rooter and Plumbing Logo">
+            </div>
+            <div class="company-details">
+                <strong>OAKLAND ROOTER AND PLUMBING.</strong><br>
+                2435 Blanding Ave<br>
+                Alameda, CA 94501<br>
+                Tel: (510) 479-1129<br>
+                LIC#965873
+            </div>
+        </div>
 
-    // Fill info
-    const infoDiv = document.getElementById('info');
-    infoDiv.innerHTML = `
-      <h2>Info</h2>
-      <p><label>Name:</label> ${data.name || ''}</p>
-      <p><label>Job Name:</label> ${data.jobName || ''}</p>
-      <p><label>Tech Name:</label> ${data.techName || ''}</p>
-      <p><label>Address:</label> ${data.address || ''}</p>
-      <p><label>Job Location:</label> ${data.jobLocation || ''}</p>
-      <p><label>Date:</label> ${data.date || ''}</p>
-      <p><label>Date of Plans:</label> ${data.datePlans || ''}</p>
-      <p><label>Phone:</label> ${data.phone || ''}</p>
-      <p><label>Email:</label> ${data.email || ''}</p>
-      <p><label>Architect:</label> ${data.architect || ''}</p>
-    `;
+        <div class="section-grid customer-job-info">
+            <div class="item proposal-submitted-to">
+                <label>Proposal Submitted To:</label>
+                <div class="data-field" id="proposalToName"></div>
+            </div>
+            <div class="item job-name">
+                <label>Job Name:</label>
+                <div class="data-field" id="jobName"></div>
+            </div>
+            <div class="item address">
+                <label>Address:</label>
+                <div class="data-field" id="address"></div>
+            </div>
+            <div class="item job-location">
+                <label>Job Location:</label>
+                <div class="data-field" id="jobLocation"></div>
+            </div>
+            <div class="item date">
+                <label>Date:</label>
+                <div class="data-field" id="date"></div>
+            </div>
+            <div class="item date-of-plans">
+                <label>Date of Plans:</label>
+                <div class="data-field" id="datePlans"></div>
+            </div>
+            <div class="item phone">
+                <label>Phone:</label>
+                <div class="data-field" id="phone"></div>
+            </div>
+            <div class="item email">
+                <label>Email:</label>
+                <div class="data-field" id="email"></div>
+            </div>
+            <div class="item phone">
+                <label>Tech:</label>
+                <div class="data-field" id="tech"></div>
+            </div>
+            <div class="item architect">
+                <label>Architect:</label>
+                <div class="data-field" id="architect"></div>
+            </div>
+        </div>
 
-    // Fill procedures
-    const proceduresDiv = document.getElementById('procedures');
-    proceduresDiv.innerHTML = '<h2>Procedures</h2>';
-    (data.procedures || []).forEach(proc => {
-      const p = document.createElement('p');
-      p.className = 'procedure';
-      p.textContent = proc.description + ' - $' + proc.cost.toFixed(2);
-      proceduresDiv.appendChild(p);
-    });
+        <div class="specifications-estimates">
+            <div class="label">We hereby submit specifications and estimates for:</div>
+            <div class="content-area" id="specificationsContent">
+                </div>
+        </div>
 
-    // Fill payment info
-    const paymentDiv = document.getElementById('payment');
-    paymentDiv.innerHTML = `
-      <h2>Payment & Info</h2>
-      <p><label>Total Cost:</label> $${data.totalCost || '0.00'}</p>
-      <p><label>Payments as Followed:</label> ${data.paymentFollow || ''}</p>
-      <p><label>Submitted By:</label> ${data.submittedBy || ''}</p>
-      <p><label>Withdraw Period:</label> ${data.withdrawPeriod || ''}</p>
-    `;
-  </script>
+        <div class="total-sum-section">
+            <div class="left-text">
+                We propose hereby to furnish material and labor complete in accordance with the above specification's for the sum of:
+            </div>
+            <div class="right-amount">
+                <span class="currency">$</span>
+                <div class="data-field" id="totalCost"></div>
+                <label>Dollars</label>
+            </div>
+        </div>
+
+        <div class="payment-conditions">
+            <div class="label">with payments to be made as follows:</div>
+            <div class="content-area" id="paymentFollow"></div>
+        </div>
+
+        <div class="footer-grid">
+            <div class="note-section">
+                Any alteration or deviation from the above specifications involving extra costs will be executed only upon written orders and will become an extra charge over and above this estimate. All agreements contingent upon strikes, accidents, or delays beyond our control.
+            </div>
+            <div class="note-section">
+                <div class="signature-line">
+                    <label>Respectfully Submitted By</label>
+                    <div class="data-field" id="submittedBy"></div>
+                </div>
+                <div class="note-line">
+                    Note - this proposal may be withdrawn by us if not accepted within <span class="data-field" id="withdrawPeriod"></span> days.
+                </div>
+            </div>
+        </div>
+
+        <div class="acceptance-section">
+            ACCEPTANCE OF PROPOSAL
+        </div>
+
+        <div class="bottom-signatures">
+            <div class="signature-block">
+                <p>The above prices, specifications and conditions are satisfactory and are hereby accepted. You are authorized to do the work as specified.</p>
+                <p>Payments will be made as outlined above.</p>
+            </div>
+            <div class="signature-block">
+                <div class="signature-line">
+                    <div class="data-field" id="signatureCustomer"></div>
+                </div>
+                <div class="signature-label">Signature</div>
+            </div>
+            <div class="signature-block date-accepted-block">
+                <div class="signature-line">
+                    <div class="data-field" id="dateAccepted"></div>
+                </div>
+                <div class="signature-label">Date of Acceptance</div>
+            </div>
+            <div class="signature-block">
+                <div class="signature-line">
+                    <div class="data-field" id="signatureCompany"></div>
+                </div>
+                <div class="signature-label">Signature</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function renderWorkOrder(data) {
+            // Customer and Job Info
+            document.getElementById('proposalToName').textContent = data.name || '';
+            document.getElementById('jobName').textContent = data.jobName || '';
+            document.getElementById('address').textContent = data.address || '';
+            document.getElementById('jobLocation').textContent = data.jobLocation || '';
+            document.getElementById('date').textContent = data.date || '';
+            document.getElementById('datePlans').textContent = data.datePlans || '';
+            document.getElementById('phone').textContent = data.phone || '';
+            document.getElementById('email').textContent = data.email || '';
+            document.getElementById('tech').textContent = data.techName || '';
+            document.getElementById('architect').textContent = data.architect || '';
+
+            // Specifications and Estimates
+            const specificationsContentDiv = document.getElementById('specificationsContent');
+            specificationsContentDiv.innerHTML = ''; // Clear previous content
+            if (data.procedures && data.procedures.length > 0) {
+                data.procedures.forEach(proc => {
+                    const p = document.createElement('div');
+                    p.className = 'procedure-item'; // Add a class for styling individual items
+                    // Format as "Description - $Cost" or just "Description" if no cost
+                    p.textContent = proc.description + (proc.cost !== undefined ? ` - $${proc.cost.toFixed(2)}` : '');
+                    specificationsContentDiv.appendChild(p);
+                });
+            } else {
+                // Add placeholder lines if no procedures, similar to the blank form
+                for (let i = 0; i < 10; i++) { // Adjust number of lines as needed
+                    const line = document.createElement('div');
+                    line.style.borderBottom = '1px solid #ccc';
+                    line.style.minHeight = '18px'; // Ensure lines have some height
+                    specificationsContentDiv.appendChild(line);
+                }
+            }
+
+
+            // Total Cost
+            document.getElementById('totalCost').textContent = data.totalCost !== undefined ? data.totalCost.toFixed(2) : '';
+
+            // Payment Follow
+            document.getElementById('paymentFollow').textContent = data.paymentFollow || '';
+
+            // Submitted By and Withdraw Period
+            document.getElementById('submittedBy').textContent = data.submittedBy || '';
+            document.getElementById('withdrawPeriod').textContent = data.withdrawPeriod || '';
+
+            // Acceptance Signatures
+            document.getElementById('signatureCustomer').textContent = data.signatureCustomer || '';
+            document.getElementById('dateAccepted').textContent = data.dateAccepted || '';
+            document.getElementById('signatureCompany').textContent = data.signatureCompany || '';
+        }
+
+        // The existing logic to wait for window.workOrderData remains the same
+        const waitForData = async () => {
+            while (!window.workOrderData) {
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            renderWorkOrder(window.workOrderData);
+
+            if (window.electronAPI && window.electronAPI.renderComplete) {
+                window.electronAPI.renderComplete();
+            }
+        };
+
+        waitForData();
+    </script>
 </body>
 </html>
